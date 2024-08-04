@@ -6,4 +6,4 @@ PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 # Minute, Hour, Day, Month, WeekDay (0 = Sunday)
 00 06 * * *   root    python3 /usr/local/DailyReport2/status_report.py
 
-@reboot root python3 /usr/local/DailyReport2/status_report.py --reboot-alert
+@reboot root sleep 30 && python3 /usr/local/DailyReport2/status_report.py --reboot-alert
