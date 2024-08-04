@@ -25,7 +25,7 @@ fi
 
 echo Installing application....
 cp "${SCRIPT_DIR}"/*.py $INSTALL_DIR
-cp "${SCRIPT_DIR}"/statusreport/*.py $INSTALL_LIB_DIR
+cp "${SCRIPT_DIR}"/statusreport/* $INSTALL_LIB_DIR
 
 if [ ! -f /etc/DailyReport.yaml ]; then
     echo "Copying DailyReport.yaml config file"
@@ -45,7 +45,7 @@ echo
 
 if [ $UPGRADE = FALSE ]; then
     echo "Installation Complete"
-    echo "Please configure /etc/DailyReport.json"
+    echo "Please configure /etc/DailyReport.yaml"
 else
     echo "Upgrade Complete"
 fi
