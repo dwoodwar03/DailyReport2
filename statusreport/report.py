@@ -12,11 +12,14 @@ import statusreport.formatx as formatx
 
 class Report:
 
-    def __init__(self, config_file):
+    def __init__(self, config_file, reboot_alert):
         self.cfg = Config(config_file)
+        self.reboot_alert = reboot_alert
+
         self.hostname = socket.gethostname()
         self.fqdn = socket.getfqdn()
         self.sender = f"root@{self.fqdn}"
+        self.report_name = "Reboot Alert" if reboot_alert else "Daily Report"
         self.body = ""
 
         self.subject = None
@@ -68,7 +71,19 @@ class Report:
         print("Local IP:", self.local_ip)
 
     def build_report(self):
-        self.body += formatx.uptime(*self.uptime)
+
+        warn = self.public_ip[1] | self.raid_status[1] | self.local_ip[1]
+
+        # Do not set warning on uptime if this is a reboot alert.
+        if self.reboot_alert:
+            self.body += formatx.uptime(self.uptime[0], False)
+        else:
+            self.body += formatx.uptime(*self.uptime)
+            warn = warn | self.uptime[1]
+
+        warning = " *** WARNING ***" if warn else ""
+        self.subject = f"{socket.gethostname()} {self.report_name}{warning}"
+
         self.body += formatx.memory(*self.memory)
         self.body += formatx.distribution(*self.distribution)
         self.body += formatx.kernel(*self.kernel)
@@ -80,11 +95,6 @@ class Report:
         self.body += formatx.public_ip(*self.public_ip)
         self.body += formatx.raspberry_pi_model(*self.raspberry_pi_model)
         self.body += formatx.raid_status(*self.raid_status)
-
-        warn = self.uptime[1] | self.public_ip[1] | self.raid_status[1] | self.local_ip[1]
-
-        warning = " *** WARNING ***" if warn else ""
-        self.subject = f"{socket.gethostname()} Daily Report{warning}"
 
     def send_report(self):
         message = (f"From: {self.hostname} <{self.sender}>\n"
