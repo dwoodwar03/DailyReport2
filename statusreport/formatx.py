@@ -39,8 +39,8 @@ def uptime(uptime_secs, warn):
     report_time = today.strftime(formatstring)
 
     uptime_secs = (f"System Uptime          : {uptime_text}\n"
-               f"System Boot time       : {boot_time}\n"
-               f"Report Generation Time : {report_time}\n")
+                   f"System Boot time       : {boot_time}\n"
+                   f"Report Generation Time : {report_time}\n")
 
     return format_html("System Uptime", uptime_secs, warn)
 
@@ -81,7 +81,11 @@ def public_ip(ip, warn):
 def raspberry_pi_model(model, warn):
     if model:
         return format_html("Raspberry Pi Model Details", model, warn)
-    else:
-        return ""
+    return ""
 
+
+def raid_status(raid, warn):
+    if raid:
+        return format_html("Raid Status Details", raid, warn)
+    return ""
 

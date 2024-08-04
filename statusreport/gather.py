@@ -170,3 +170,21 @@ def raspberry_pi_model():
 
     return version, warn
 
+
+def raid_status():
+    warn = False
+    raid_device = grep("/proc/mdstat", r'^(md[0-9]*)')
+
+    if not raid_device:
+        return "", warn
+
+    if len(raid_device) > 1:
+        return f"Multiple Devices Found: {raid_device}", True
+
+    current_raid_status = grep("/proc/mdstat", r'blocks .*\[.*\] \[(.*)\]')[0]
+    if "_" in current_raid_status:
+        warn = True
+
+    content = get_info(f"mdadm --query --detail /dev/{raid_device[0]}")
+
+    return content, warn
