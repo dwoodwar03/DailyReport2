@@ -1,0 +1,4 @@
+mail:
+  server: {{ SERVER }}
+  sendto:
+    - [{{ FULL_NAME }}, {{ EMAIL }}]

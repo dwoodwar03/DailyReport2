@@ -1,0 +1,9 @@
+# /etc/cron.d/DailyReport: crontab entries for the DailyReport package
+
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+# Minute, Hour, Day, Month, WeekDay (0 = Sunday)
+00 06 * * *   root    python3 /usr/local/DailyReport2/status_report.py
+
+@reboot root python3 /usr/local/DailyReport2/reboot_report.py
