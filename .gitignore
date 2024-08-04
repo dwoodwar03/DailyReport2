@@ -1,0 +1,6 @@
+ # Pycharm config
+.idea/
+
+# Local dev files including example configs
+dev/
+
