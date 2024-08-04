@@ -31,6 +31,7 @@ class Report:
         self.public_ip = None
         self.raspberry_pi_model = None
         self.raid_status = None
+        self.local_ip = None
 
     def gather_info(self):
         self.uptime = gather.uptime_seconds()
@@ -45,6 +46,7 @@ class Report:
         self.public_ip = gather.public_ip()
         self.raspberry_pi_model = gather.raspberry_pi_model()
         self.raid_status = gather.raid_status()
+        self.local_ip = gather.local_ip()
 
     def dump_info(self):
         """
@@ -63,6 +65,7 @@ class Report:
         print("Public IP:", self.public_ip)
         print("Raspberry Pi Model:", self.raspberry_pi_model)
         print("RAID Status:", self.raid_status)
+        print("Local IP:", self.local_ip)
 
     def build_report(self):
         self.body += formatx.uptime(*self.uptime)
@@ -73,11 +76,13 @@ class Report:
         self.body += formatx.fs_space(*self.fs_space)
         self.body += formatx.fs_inode(*self.fs_inode)
         self.body += formatx.logged_on(*self.logged_on)
+        self.body += formatx.local_ip(*self.local_ip)
         self.body += formatx.public_ip(*self.public_ip)
         self.body += formatx.raspberry_pi_model(*self.raspberry_pi_model)
         self.body += formatx.raid_status(*self.raid_status)
 
-        warn = self.uptime[1] | self.public_ip[1] | self.raid_status[1]
+        warn = self.uptime[1] | self.public_ip[1] | self.raid_status[1] | self.local_ip[1]
+
         warning = " *** WARNING ***" if warn else ""
         self.subject = f"{socket.gethostname()} Daily Report{warning}"
 

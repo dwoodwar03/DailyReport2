@@ -89,3 +89,18 @@ def raid_status(raid, warn):
         return format_html("Raid Status Details", raid, warn)
     return ""
 
+
+def local_ip(interfaces, warn):
+
+    if not interfaces:
+        return format_html("Local IP Details", "No Interfaces Found", warn)
+
+    contents = f'{"interface":10}{"ip address":16}{"netmask":16}\n'
+    contents += f'{"-" * 9} {"-" * 15} {"-" * 15}\n'
+
+    for interface in interfaces.keys():
+        for sub_interface in interfaces[interface]:
+            contents += f"{interface:10}{sub_interface['addr']:16}{sub_interface['netmask']:16}\n"
+
+    return format_html("Local IP Details", contents, warn)
+

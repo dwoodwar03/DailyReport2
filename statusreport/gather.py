@@ -3,6 +3,7 @@ Holds functions which gather information about the system.
 """
 
 import json
+import netifaces
 import os
 import re
 import shlex
@@ -176,7 +177,7 @@ def raid_status():
     raid_device = grep("/proc/mdstat", r'^(md[0-9]*)')
 
     if not raid_device:
-        return "", warn
+        return None, warn
 
     if len(raid_device) > 1:
         return f"Multiple Devices Found: {raid_device}", True
@@ -188,3 +189,20 @@ def raid_status():
     content = get_info(f"mdadm --query --detail /dev/{raid_device[0]}")
 
     return content, warn
+
+
+def local_ip():
+    interface_details = {}
+    interfaces = netifaces.interfaces()
+    for interface in interfaces:
+        if interface == "lo":
+            continue
+        detail = netifaces.ifaddresses(interface).get(netifaces.AF_INET)
+        if detail:
+            interface_details[interface] = detail
+
+    if not interface_details:
+        return "", True
+
+    return interface_details, False
+
