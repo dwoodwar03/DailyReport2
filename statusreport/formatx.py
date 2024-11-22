@@ -104,3 +104,5 @@ def local_ip(interfaces, warn):
 
     return format_html("Local IP Details", contents, warn)
 
+def backup_log(log, warn):
+    return format_html("Backup Log Details", log, warn)

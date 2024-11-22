@@ -35,6 +35,7 @@ class Report:
         self.raspberry_pi_model = None
         self.raid_status = None
         self.local_ip = None
+        self.backup_log = None
 
     def gather_info(self):
         self.uptime = gather.uptime_seconds()
@@ -50,6 +51,7 @@ class Report:
         self.raspberry_pi_model = gather.raspberry_pi_model()
         self.raid_status = gather.raid_status()
         self.local_ip = gather.local_ip()
+        self.backup_log = gather.backup_log()
 
     def dump_info(self):
         """
@@ -72,7 +74,7 @@ class Report:
 
     def build_report(self):
 
-        warn = self.public_ip[1] | self.raid_status[1] | self.local_ip[1]
+        warn = self.public_ip[1] | self.raid_status[1] | self.local_ip[1] | self.backup_log[1]
 
         # Do not set warning on uptime if this is a reboot alert.
         if self.reboot_alert:
@@ -95,6 +97,7 @@ class Report:
         self.body += formatx.public_ip(*self.public_ip)
         self.body += formatx.raspberry_pi_model(*self.raspberry_pi_model)
         self.body += formatx.raid_status(*self.raid_status)
+        self.body += formatx.backup_log(*self.backup_log)
 
     def send_report(self):
         message = (f"From: {self.hostname} <{self.sender}>\n"

@@ -12,6 +12,7 @@ import urllib.request
 import yaml
 
 from pathlib import Path
+from datetime import datetime
 
 pi_models_file = Path(os.path.dirname(__file__)) / "pi_models.yaml"
 pi_models: dict = yaml.safe_load(open(pi_models_file))
@@ -206,3 +207,27 @@ def local_ip():
 
     return interface_details, False
 
+
+def backup_log():
+    """
+    Return "Backup not enabled" if /etc/cron.d/Backup does not exist., warning = False
+    If backup file does not exist, Return "Missing Backup Log", warning = True
+    If backup file does exist and > 1 day old Return "Backup not run in 24 hrs", warning = True
+    Return content of Log, Warning = False
+
+    :return:
+    """
+
+    enabled = Path("/etc/cron.d/Backup").exists()
+    if not enabled:
+        return "Backup not enabled", False
+
+    backup_log_file = Path("/var/log/backup.log")
+    if not backup_log_file.exists():
+        return "Missing Backup Log", True
+
+    log_file_age_days = (datetime.timestamp(datetime.now()) - backup_log_file.stat().st_mtime) / 86400
+    if log_file_age_days > 1:
+        return "Backup not run in 24 hrs", True
+
+    return open(backup_log_file, "r").read(), False
