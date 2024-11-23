@@ -224,10 +224,10 @@ def backup_log():
 
     backup_log_file = Path("/var/log/backup.log")
     if not backup_log_file.exists():
-        return "Missing Backup Log", True
+        return "Missing Backup Log or Backup has never run", True
 
     log_file_age_days = (datetime.timestamp(datetime.now()) - backup_log_file.stat().st_mtime) / 86400
     if log_file_age_days > 1:
-        return "Backup not run in 24 hrs", True
+        return f"Backup last run {log_file_age_days:.0f} days ago", True
 
     return open(backup_log_file, "r").read(), False
