@@ -3,7 +3,7 @@ Used to format the different types of output for the email report.
 """
 
 import datetime
-
+from html import escape
 
 def format_html(title, content, warn):
     if warn:
@@ -11,7 +11,7 @@ def format_html(title, content, warn):
 
     output = (f"<B><U>{title}</U></B>\n"
               f"<PRE>\n"
-              f"{content}"
+              f"{escape(content)}"
               f"</PRE>\n")
     return output
 
