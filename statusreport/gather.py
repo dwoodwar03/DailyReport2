@@ -213,6 +213,7 @@ def backup_log():
     Return "Backup not enabled" if /etc/cron.d/Backup does not exist., warning = False
     If backup file does not exist, Return "Missing Backup Log", warning = True
     If backup file does exist and > 1 day old Return "Backup not run in 24 hrs", warning = True
+    If backup file does exist and is empty, Return "Backup Log is empty", warning = True
     Return content of Log, Warning = False
 
     :return:
@@ -225,6 +226,9 @@ def backup_log():
     backup_log_file = Path("/var/log/backup.log")
     if not backup_log_file.exists():
         return "Missing Backup Log or Backup has never run", True
+
+    if backup_log_file.stat().st_size == 0:
+        return "Backup Log is empty - Likely Backup Failed", True
 
     log_file_age_days = (datetime.timestamp(datetime.now()) - backup_log_file.stat().st_mtime) / 86400
     if log_file_age_days > 1:
