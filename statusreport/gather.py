@@ -178,9 +178,14 @@ def raid_status():
     raid_device = grep("/proc/mdstat", r'^(md[0-9]*)')
 
     if not raid_device:
-        return None, warn
+        return None, False
 
-    if len(raid_device) > 1:
+    # Not a PI.
+    if len(raid_device) > 2:
+        return f"Multiple Devices Found: {raid_device}", False
+
+    # Possibly badly broken mirror.
+    if len(raid_device) == 2:
         return f"Multiple Devices Found: {raid_device}", True
 
     current_raid_status = grep("/proc/mdstat", r'blocks .*\[.*\] \[(.*)\]')[0]
