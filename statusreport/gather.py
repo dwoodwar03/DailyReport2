@@ -239,4 +239,23 @@ def backup_log():
     if log_file_age_days > 1:
         return f"Backup last run {log_file_age_days:.0f} days ago", True
 
-    return open(backup_log_file, "r").read(), False
+    return backup_log_file.read_text(), False
+
+def reboot_required():
+    """
+    Returns list of packages which requires a reboot to be fully installed.
+    True is returned meaning reboot is required.
+    False is returned meaning reboot is not required.
+    :return:
+    """
+    required = Path("/var/run/reboot-required").exists()
+    package_list = Path("/var/run/reboot-required.pkgs")
+    packages = ""
+
+    if required:
+        if package_list.exists():
+            packages = package_list.read_text()
+        return packages, True
+    else:
+        return packages, False
+

@@ -106,3 +106,6 @@ def local_ip(interfaces, warn):
 
 def backup_log(log, warn):
     return format_html("Backup Log Details", log, warn)
+
+def reboot_required(reboot, warn):
+    return format_html("Reboot Required Package Details", reboot, warn)

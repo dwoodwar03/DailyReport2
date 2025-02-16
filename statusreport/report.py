@@ -36,6 +36,7 @@ class Report:
         self.raid_status = None
         self.local_ip = None
         self.backup_log = None
+        self.reboot_required = None
 
     def gather_info(self):
         self.uptime = gather.uptime_seconds()
@@ -52,6 +53,7 @@ class Report:
         self.raid_status = gather.raid_status()
         self.local_ip = gather.local_ip()
         self.backup_log = gather.backup_log()
+        self.reboot_required = gather.reboot_required()
 
     def dump_info(self):
         """
@@ -60,6 +62,7 @@ class Report:
         """
         print(self.subject)
         print("Uptime:", self.uptime)
+        print("Reboot required:", self.reboot_required)
         print("Memory:", self.memory)
         print("Distribution:", self.distribution)
         print("Kernel:", self.kernel)
@@ -74,7 +77,7 @@ class Report:
 
     def build_report(self):
 
-        warn = self.public_ip[1] | self.raid_status[1] | self.local_ip[1] | self.backup_log[1]
+        warn = self.public_ip[1] | self.raid_status[1] | self.local_ip[1] | self.backup_log[1] | self.reboot_required[1]
 
         # Do not set warning on uptime if this is a reboot alert.
         if self.reboot_alert:
@@ -86,6 +89,7 @@ class Report:
         warning = " *** WARNING ***" if warn else ""
         self.subject = f"{socket.gethostname()} {self.report_name}{warning}"
 
+        self.body += formatx.reboot_required(*self.reboot_required)
         self.body += formatx.memory(*self.memory)
         self.body += formatx.distribution(*self.distribution)
         self.body += formatx.kernel(*self.kernel)
