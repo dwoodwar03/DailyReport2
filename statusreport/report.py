@@ -4,6 +4,7 @@ Manages collection of stats for the daily report.
 
 import socket
 import smtplib
+from email.message import EmailMessage
 
 from .config import Config
 import statusreport.gather as gather
@@ -104,15 +105,14 @@ class Report:
         self.body += formatx.backup_log(*self.backup_log)
 
     def send_report(self):
-        message = (f"From: {self.hostname} <{self.sender}>\n"
-                   f"To: {self.cfg.envelope_sendto}\n"
-                   f"Subject: {self.subject}\n"
-                   f"MIME-Version: 1.0\n"
-                   f"Content-type: text/html\n\n"
-                   f"{self.body}\n")
 
         smtp = smtplib.SMTP(self.cfg.server)
-        smtp.ehlo()
-        smtp.starttls()
-        smtp.sendmail(self.sender, self.cfg.sendto, message)
+
+        email = EmailMessage()
+        email.set_content(self.body, subtype="html")
+        email["To"] = self.cfg.envelope_sendto
+        email["From"] = f"{self.hostname} <{self.sender}>"
+        email["Subject"] = self.subject
+        smtp.send_message(email)
+
         smtp.quit()
