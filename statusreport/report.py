@@ -38,6 +38,7 @@ class Report:
         self.local_ip = None
         self.backup_log = None
         self.reboot_required = None
+        self.package_status = None
 
     def gather_info(self):
         self.uptime = gather.uptime_seconds()
@@ -55,6 +56,7 @@ class Report:
         self.local_ip = gather.local_ip()
         self.backup_log = gather.backup_log()
         self.reboot_required = gather.reboot_required()
+        self.package_status = gather.package_status()
 
     def dump_info(self):
         """
@@ -94,6 +96,7 @@ class Report:
         self.body += formatx.memory(*self.memory)
         self.body += formatx.distribution(*self.distribution)
         self.body += formatx.kernel(*self.kernel)
+        self.body += formatx.package_status(*self.package_status)
         self.body += formatx.root_fs(*self.rootfs_writes)
         self.body += formatx.fs_space(*self.fs_space)
         self.body += formatx.fs_inode(*self.fs_inode)

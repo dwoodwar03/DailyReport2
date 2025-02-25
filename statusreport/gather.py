@@ -2,6 +2,7 @@
 Holds functions which gather information about the system.
 """
 
+import apt
 import json
 import netifaces
 import os
@@ -259,3 +260,21 @@ def reboot_required():
     else:
         return packages, False
 
+def package_status():
+    """
+    Returns list of packages which are available to be upgraded.
+    :return:
+    """
+
+    detail = []
+
+    for pkg in apt.Cache():
+        if pkg.is_upgradable:
+            detail.append({
+                "name": pkg.shortname,
+                "from": pkg.installed.version,
+                "to": pkg.candidate.version,
+                "summary": pkg.installed.summary
+            })
+
+    return detail, False

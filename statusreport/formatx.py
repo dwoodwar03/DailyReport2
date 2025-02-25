@@ -109,3 +109,16 @@ def backup_log(log, warn):
 
 def reboot_required(reboot, warn):
     return format_html("Reboot Required Package Details", reboot, warn)
+
+def package_status(package, warn):
+    if not package:
+        return format_html("Package Status", "No Packages are available for upgrade", warn)
+
+    contents = f'{"Name":26}{"New Version":14}\n'
+    contents += f'{"-" * 25} {"-" * 13}\n'
+
+    for pkg in package:
+        contents += f"{pkg['name']:25} {pkg['to']:13}\n"
+
+    contents += f"{len(package)} package's available for upgrade.\n"
+    return format_html("Package Status", contents, warn)
