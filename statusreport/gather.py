@@ -278,3 +278,15 @@ def package_status():
             })
 
     return detail, False
+
+def monitor_sync():
+    sync_status_file = Path("/var/log/monitor-sync-state.yaml")
+
+    if not sync_status_file.exists():
+        return None, False
+
+    content = sync_status_file.read_text()
+    if content.count("OK") < 2:
+        return "Issues exist with Monitor Sync Checker", True
+
+    return "Monitor Sync Checker is OK", False

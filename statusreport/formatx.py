@@ -122,3 +122,8 @@ def package_status(package, warn):
 
     contents += f"{len(package)} package's available for upgrade.\n"
     return format_html("Package Status", contents, warn)
+
+def monitor_sync(sync, warn):
+    if sync:
+        return format_html("File Sync Monitor Details", sync, warn)
+    return ""

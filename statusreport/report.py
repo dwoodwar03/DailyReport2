@@ -39,6 +39,7 @@ class Report:
         self.backup_log = None
         self.reboot_required = None
         self.package_status = None
+        self.monitor_sync_status = None
 
     def gather_info(self):
         self.uptime = gather.uptime_seconds()
@@ -57,6 +58,8 @@ class Report:
         self.backup_log = gather.backup_log()
         self.reboot_required = gather.reboot_required()
         self.package_status = gather.package_status()
+        self.monitor_sync_status = gather.monitor_sync()
+
 
     def dump_info(self):
         """
@@ -105,6 +108,7 @@ class Report:
         self.body += formatx.public_ip(*self.public_ip)
         self.body += formatx.raspberry_pi_model(*self.raspberry_pi_model)
         self.body += formatx.raid_status(*self.raid_status)
+        self.body += formatx.monitor_sync(*self.monitor_sync_status)
         self.body += formatx.backup_log(*self.backup_log)
 
     def send_report(self):
