@@ -83,7 +83,8 @@ class Report:
 
     def build_report(self):
 
-        warn = self.public_ip[1] | self.raid_status[1] | self.local_ip[1] | self.backup_log[1] | self.reboot_required[1]
+        warn = (self.public_ip[1] | self.raid_status[1] | self.local_ip[1] | self.backup_log[1] |
+                self.reboot_required[1] | self.monitor_sync_status[1])
 
         # Do not set warning on uptime if this is a reboot alert.
         if self.reboot_alert:
