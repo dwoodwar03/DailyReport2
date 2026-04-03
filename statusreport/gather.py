@@ -176,6 +176,11 @@ def raspberry_pi_model():
 
 def raid_status():
     warn = False
+
+    # /proc/mdstat does not always exist when raid not configured.
+    if not Path("/proc/mdstat").exists():
+        return None, False
+
     raid_device = grep("/proc/mdstat", r'^(md[0-9]*)')
 
     if not raid_device:
