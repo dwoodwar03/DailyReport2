@@ -97,9 +97,9 @@ class Report:
 
         # Reboot Required should not be a warning just an identifier on the subject
         if self.reboot_required[1]:
-            warning = "[REBOOT REQUIRED] " + warning
+            warning = warning + " [REBOOT REQ]"
 
-        self.subject = f"{socket.gethostname()} {self.report_name} {warning}"
+        self.subject = f"{warning} {socket.gethostname()} {self.report_name} "
 
         self.body += formatx.reboot_required(*self.reboot_required)
         self.body += formatx.memory(*self.memory)
