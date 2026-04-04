@@ -84,7 +84,7 @@ class Report:
     def build_report(self):
 
         warn = (self.public_ip[1] | self.raid_status[1] | self.local_ip[1] | self.backup_log[1] |
-                self.reboot_required[1] | self.monitor_sync_status[1])
+                self.monitor_sync_status[1])
 
         # Do not set warning on uptime if this is a reboot alert.
         if self.reboot_alert:
@@ -93,8 +93,13 @@ class Report:
             self.body += formatx.uptime(*self.uptime)
             warn = warn | self.uptime[1]
 
-        warning = " *** WARNING ***" if warn else ""
-        self.subject = f"{socket.gethostname()} {self.report_name}{warning}"
+        warning = "*** WARNING ***" if warn else ""
+
+        # Reboot Required should not be a warning just an identifier on the subject
+        if self.reboot_required[1]:
+            warning = "[REBOOT REQUIRED] " + warning
+
+        self.subject = f"{socket.gethostname()} {self.report_name} {warning}"
 
         self.body += formatx.reboot_required(*self.reboot_required)
         self.body += formatx.memory(*self.memory)
