@@ -127,3 +127,6 @@ def monitor_sync(sync, warn):
     if sync:
         return format_html("File Sync Monitor Details", sync, warn)
     return ""
+
+def machine_info(machine, warn):
+    return format_html("Machine Description", machine, warn)

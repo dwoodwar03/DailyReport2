@@ -295,3 +295,15 @@ def monitor_sync():
         return "Issues exist with Monitor Sync Checker", True
 
     return "Monitor Sync Checker is OK", False
+
+def machine_info():
+    """
+    Returns contents of /etc/machine-info if it exists.  On newer builds this is defined such that the usage, and
+    location of the device is exposed.
+    :return:
+    """
+    machine_info_file = Path("/etc/machine-info")
+    if machine_info_file.exists():
+        return machine_info_file.read_text(), False
+
+    return "", False

@@ -25,6 +25,7 @@ class Report:
 
         self.subject = None
         self.uptime = None
+        self.machine_info = None
         self.memory = None
         self.distribution = None
         self.kernel = None
@@ -42,8 +43,10 @@ class Report:
         self.monitor_sync_status = None
 
     def gather_info(self):
-        self.uptime = gather.uptime_seconds()
         # boot time calculated from uptime in seconds.
+        self.uptime = gather.uptime_seconds()
+
+        self.machine_info = gather.machine_info()
         self.memory = gather.memory_usage()
         self.distribution = gather.distribution()
         self.kernel = gather.kernel()
@@ -100,6 +103,7 @@ class Report:
             warning = warning + " [REBOOT REQ]"
 
         self.subject = f"{warning} {socket.gethostname()} {self.report_name} "
+        self.body += formatx.machine_info(*self.machine_info)
 
         self.body += formatx.reboot_required(*self.reboot_required)
         self.body += formatx.memory(*self.memory)
