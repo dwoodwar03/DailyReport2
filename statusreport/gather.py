@@ -150,9 +150,8 @@ def public_ip():
     """
     warn = False
     try:
-        request = urllib.request.urlopen('http://httpbin.org/ip')
-        result = request.read().decode("utf-8")
-        ip_addr = json.loads(result)['origin']
+        request = urllib.request.urlopen('https://api.ipify.org')
+        ip_addr = request.read().decode("utf-8")
     except: # TODO Make more explicit.
         ip_addr = "* NETWORK ERROR *"
         warn = True
