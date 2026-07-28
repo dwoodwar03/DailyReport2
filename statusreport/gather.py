@@ -140,7 +140,7 @@ def logged_on():
     Gets list of logged on users.
     :return:
     """
-    return get_info("who"), False
+    return get_info("loginctl list-sessions"), False
 
 
 def public_ip():
